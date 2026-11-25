@@ -1,0 +1,352 @@
+﻿<Window x:Class="Gestion_camping.Ventana_principal"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Las Lagunas - Panel de Gestión" Height="680" Width="1120"
+        MinHeight="600" MinWidth="950" WindowStartupLocation="CenterScreen" Background="#FFF5F5F5">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="65"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- ================= CABECERA COMÚN A TODA LA APP ================= -->
+        <Border Grid.Row="0" Background="#FFEEEEEE" BorderBrush="#FFCCCCCC" BorderThickness="0,0,0,1.5" Padding="15,0">
+            <DockPanel LastChildFill="False">
+                <!-- Izquierda: Logo + Camping Las Lagunas -->
+                <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" VerticalAlignment="Center"
+                            Cursor="Hand" ToolTip="Volver a la pantalla de Inicio"
+                            MouseLeftButtonUp="LogoInicio_MouseLeftButtonUp">
+                    <Border Width="42" Height="42" Background="#FF2E7D32" CornerRadius="6" Margin="0,0,12,0">
+                        <TextBlock Text="🏕️" FontSize="22" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock Text="Camping Las Lagunas" FontSize="20" FontWeight="Bold" Foreground="#FF1B3B2B"/>
+                        <TextBlock Text="Panel de Gestión" FontSize="11" Foreground="#FF666666"/>
+                    </StackPanel>
+                </StackPanel>
+
+                <!-- Derecha: Usuario + Inicio + Ayuda + Salir -->
+                <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Border Width="36" Height="36" CornerRadius="18" Background="White" BorderBrush="#FF888888" BorderThickness="1" Margin="0,0,10,0">
+                        <TextBlock Text="👤" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <StackPanel VerticalAlignment="Center" Margin="0,0,25,0">
+                        <TextBlock x:Name="txtUsuarioConectado" Text="Empleado1" FontWeight="Bold" FontSize="13"/>
+                        <TextBlock x:Name="txtFechaAcceso" Text="Último acceso: 23/11/2026 - 20:00h" FontSize="11" Foreground="#FF666666"/>
+                    </StackPanel>
+
+                    <Button x:Name="btnInicio" Content="🏠 Inicio" Padding="12,6" Margin="0,0,10,0"
+                            Background="White" BorderBrush="#FF666666" BorderThickness="1.2"
+                            FontWeight="SemiBold" Visibility="Collapsed" Click="VolverAInicio_Click"/>
+
+                    <Button x:Name="btnAyuda" Content="❓ Ayuda" Padding="12,6" Margin="0,0,10,0"
+                            Background="White" BorderBrush="#FF666666" BorderThickness="1.2"
+                            FontWeight="SemiBold" Click="btnAyuda_Click"/>
+
+                    <Button x:Name="btnSalir" Content="⏻ Salir" Padding="12,6"
+                            Background="#FFE57373" Foreground="Black" BorderBrush="#FFB71C1C" BorderThickness="1.2"
+                            FontWeight="Bold" Click="btnSalir_Click"/>
+                </StackPanel>
+            </DockPanel>
+        </Border>
+
+        <!-- ================= VISTA 1: PANTALLA DE INICIO ================= -->
+        <Grid x:Name="pnlVistaInicio" Grid.Row="1" Background="White" Visibility="Visible">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="210"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Menú Lateral Izquierdo -->
+            <Border Grid.Column="0" Background="#FFF8F9FA" BorderBrush="#FFCCCCCC" BorderThickness="0,0,1.5,0" Padding="10,15">
+                <StackPanel>
+                    <Button Content="ALOJAMIENTOS" Height="38" Margin="0,0,0,6" Background="White" BorderBrush="#FF888888" Click="MenuInicio_Alojamientos_Click"/>
+                    <Button Content="RESERVAS" Height="38" Margin="0,0,0,6" Background="White" BorderBrush="#FF888888" Click="MenuInicio_Reservas_Click"/>
+                    <Button Content="EMPLEADOS" Height="38" Margin="0,0,0,6" Background="White" BorderBrush="#FF888888" Click="MenuInicio_Empleados_Click"/>
+                    <Button Content="ACTIVIDADES" Height="38" Margin="0,0,0,6" Background="White" BorderBrush="#FF888888" Click="MenuInicio_Actividades_Click"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Contenido Central: Panel de Resumen - Hoy -->
+            <Grid Grid.Column="1" Margin="25,20">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" Text="Panel de Resumen - Hoy" FontSize="22" FontWeight="Bold" Foreground="#FF222222" Margin="0,0,0,15"/>
+
+                <!-- Fila superior: Próximas Llegadas + Ocupación Actual -->
+                <Grid Grid.Row="1" Margin="0,0,0,15">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="55*"/>
+                        <ColumnDefinition Width="45*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Cuadro Próximas Llegadas -->
+                    <GroupBox Grid.Column="0" Margin="0,0,15,0" Padding="10">
+                        <GroupBox.Header>
+                            <TextBlock Text="Próximas Llegadas" FontWeight="Bold" FontSize="14"/>
+                        </GroupBox.Header>
+                        <DataGrid x:Name="dgResumenLlegadas" AutoGenerateColumns="False" IsReadOnly="True"
+                                  AlternatingRowBackground="#FFF2F2F2" GridLinesVisibility="Vertical" FontSize="13">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Cliente" Binding="{Binding Cliente}" Width="*"/>
+                                <DataGridTextColumn Header="Alojamiento" Binding="{Binding Alojamiento}" Width="120"/>
+                                <DataGridTextColumn Header="Hora Est." Binding="{Binding Hora}" Width="85"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </GroupBox>
+
+                    <!-- Cuadro Ocupación Actual -->
+                    <GroupBox Grid.Column="1" Padding="10">
+                        <GroupBox.Header>
+                            <TextBlock Text="Ocupación Actual" FontWeight="Bold" FontSize="14"/>
+                        </GroupBox.Header>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Grid Grid.Row="0" Grid.Column="0" Width="115" Height="115" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <Ellipse Fill="#FFE0E0E0" Stroke="#FF333333" StrokeThickness="2"/>
+                                <Path Fill="#FF78909C" Stroke="#FF333333" StrokeThickness="2" Data="M 57.5,57.5 L 57.5,0 A 57.5,57.5 0 1 1 8.5,87.5 Z"/>
+                            </Grid>
+
+                            <StackPanel Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" Margin="10,0,0,0">
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                    <Rectangle Width="14" Height="14" Fill="#FF78909C" Stroke="#FF333333" Margin="0,0,8,0"/>
+                                    <TextBlock Text="- 60% Ocupado" FontSize="14" FontWeight="SemiBold"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <Rectangle Width="14" Height="14" Fill="#FFE0E0E0" Stroke="#FF333333" Margin="0,0,8,0"/>
+                                    <TextBlock Text="- 40% Libres" FontSize="14" FontWeight="SemiBold"/>
+                                </StackPanel>
+                            </StackPanel>
+
+                            <Button Grid.Row="1" Grid.Column="1" Content="Ir a Alojamientos..." Height="34" Margin="10,5,10,0"
+                                    Background="White" BorderBrush="#FF333333" BorderThickness="1.5" FontWeight="Bold"
+                                    Click="MenuInicio_Alojamientos_Click"/>
+                        </Grid>
+                    </GroupBox>
+                </Grid>
+
+                <!-- Fila inferior: Actividades Programadas (Hoy) -->
+                <GroupBox Grid.Row="2" Padding="10">
+                    <GroupBox.Header>
+                        <TextBlock Text="Actividades Programadas (Hoy)" FontWeight="Bold" FontSize="14"/>
+                    </GroupBox.Header>
+                    <DataGrid x:Name="dgResumenActividades" AutoGenerateColumns="False" IsReadOnly="True"
+                              AlternatingRowBackground="#FFF2F2F2" GridLinesVisibility="Vertical" FontSize="13">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Hora" Binding="{Binding Hora}" Width="75"/>
+                            <DataGridTextColumn Header="Actividad" Binding="{Binding Actividad}" Width="*"/>
+                            <DataGridTextColumn Header="Público" Binding="{Binding Publico}" Width="90"/>
+                            <DataGridTextColumn Header="Monitor" Binding="{Binding Monitor}" Width="115"/>
+                            <DataGridTextColumn Header="Plazas" Binding="{Binding Plazas}" Width="105"/>
+                            <DataGridTextColumn Header="Lugar" Binding="{Binding Lugar}" Width="130"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </GroupBox>
+            </Grid>
+        </Grid>
+
+        <!-- ================= VISTA 2: SOLO LAS 4 PESTAÑAS DE GESTIÓN ================= -->
+        <TabControl x:Name="tcPestanas" Grid.Row="1" Margin="10" FontSize="13" Visibility="Collapsed">
+
+            <!-- PESTAÑA 1 (Índice 0) -->
+            <TabItem Header="1. Alojamientos">
+                <Grid Background="White">
+                    <TextBlock Text="Pendiente de montar: Parcelas y Cabañas / Bungalows" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Gray"/>
+                </Grid>
+            </TabItem>
+
+            <!-- PESTAÑA 2 (Índice 1) -->
+            <TabItem Header="2. Reservas y Estancias">
+                <Grid Background="White">
+                    <TextBlock Text="Pendiente de montar: Reservas y Estancias" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Gray"/>
+                </Grid>
+            </TabItem>
+
+            <!-- PESTAÑA 3: EMPLEADOS (Índice 2) -->
+            <TabItem Header="3. Empleados">
+                <Grid Background="White" Margin="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="42*"/>
+                        <ColumnDefinition Width="58*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- PANEL IZQUIERDO -->
+                    <GroupBox Grid.Column="0" Margin="0,0,10,0" Padding="8">
+                        <GroupBox.Header>
+                            <TextBlock Text="Catálogo de guías y monitores" FontWeight="Bold"/>
+                        </GroupBox.Header>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <Grid Grid.Row="0" Margin="0,5,0,10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="140"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBox x:Name="txtBuscarEmpleado" Grid.Column="0" Height="30" VerticalContentAlignment="Center"
+                                         Padding="8,0" Margin="0,0,8,0" ToolTip="Escribe un nombre o ID para filtrar"
+                                         TextChanged="FiltroEmpleados_Changed"/>
+                                <ComboBox x:Name="cbFiltroEstadoEmpleado" Grid.Column="1" Height="30"
+                                          SelectedIndex="0" SelectionChanged="FiltroEmpleados_Changed">
+                                    <ComboBoxItem Content="Estado: Todos"/>
+                                    <ComboBoxItem Content="Activo"/>
+                                    <ComboBoxItem Content="Baja"/>
+                                </ComboBox>
+                            </Grid>
+
+                            <DataGrid x:Name="dgEmpleados" Grid.Row="1" AutoGenerateColumns="False" IsReadOnly="True"
+                                      SelectionMode="Single" AlternatingRowBackground="#FFF2F2F2" GridLinesVisibility="Vertical"
+                                      SelectionChanged="dgEmpleados_SelectionChanged">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="55"/>
+                                    <DataGridTextColumn Header="Nombre" Binding="{Binding NombreCompleto}" Width="*"/>
+                                    <DataGridTextColumn Header="Teléfono" Binding="{Binding Telefono}" Width="95"/>
+                                    <DataGridTextColumn Header="Estado" Binding="{Binding Estado}" Width="65"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+
+                            <DockPanel Grid.Row="2" LastChildFill="False" Margin="0,10,0,0">
+                                <Button x:Name="btnNuevoEmpleado" DockPanel.Dock="Left" Content="➕ Nuevo Empleado"
+                                        Padding="12,7" Background="White" BorderBrush="#FF666666" BorderThickness="1.2"
+                                        Click="btnNuevoEmpleado_Click"/>
+                                <Button x:Name="btnEliminarEmpleado" DockPanel.Dock="Right" Content="🗑️ Eliminar"
+                                        Padding="12,7" Background="#FFE57373" BorderBrush="#FFB71C1C" BorderThickness="1.2"
+                                        Click="btnEliminarEmpleado_Click"/>
+                            </DockPanel>
+                        </Grid>
+                    </GroupBox>
+
+                    <!-- PANEL DERECHO -->
+                    <GroupBox x:Name="gbFichaEmpleado" Grid.Column="1" Header="Ficha de Empleado Seleccionado" Padding="10">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <GroupBox Grid.Row="0" Margin="0,0,0,8" Padding="8">
+                                <GroupBox.Header>
+                                    <TextBlock Text="Datos Personales" FontWeight="Bold"/>
+                                </GroupBox.Header>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="105"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+
+                                    <StackPanel Grid.Row="0" Grid.Column="0" Margin="0,0,10,8">
+                                        <TextBlock Text="Nombre *" FontWeight="SemiBold" Margin="0,0,0,3"/>
+                                        <TextBox x:Name="txtEmpNombre" Height="28" VerticalContentAlignment="Center" Padding="5,0"/>
+                                    </StackPanel>
+
+                                    <StackPanel Grid.Row="0" Grid.Column="1" Margin="0,0,10,8">
+                                        <TextBlock Text="Apellidos *" FontWeight="SemiBold" Margin="0,0,0,3"/>
+                                        <TextBox x:Name="txtEmpApellidos" Height="28" VerticalContentAlignment="Center" Padding="5,0"/>
+                                    </StackPanel>
+
+                                    <StackPanel Grid.Row="1" Grid.Column="0" Margin="0,0,10,0">
+                                        <TextBlock Text="Teléfono(s) *" FontWeight="SemiBold" Margin="0,0,0,3"/>
+                                        <TextBox x:Name="txtEmpTelefono" Height="28" VerticalContentAlignment="Center" Padding="5,0"/>
+                                    </StackPanel>
+
+                                    <StackPanel Grid.Row="1" Grid.Column="1" Margin="0,0,10,0">
+                                        <TextBlock Text="Correo(s) y Estado" FontWeight="SemiBold" Margin="0,0,0,3"/>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="75"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBox x:Name="txtEmpCorreo" Grid.Column="0" Height="28" VerticalContentAlignment="Center" Padding="5,0" Margin="0,0,5,0"/>
+                                            <ComboBox x:Name="cbEmpEstado" Grid.Column="1" Height="28" SelectedIndex="0">
+                                                <ComboBoxItem Content="Activo"/>
+                                                <ComboBoxItem Content="Baja"/>
+                                            </ComboBox>
+                                        </Grid>
+                                    </StackPanel>
+
+                                    <StackPanel Grid.Row="0" Grid.RowSpan="2" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                        <TextBlock Text="Foto reciente *" FontWeight="SemiBold" FontSize="11" HorizontalAlignment="Center" Margin="0,0,0,4"/>
+                                        <Border Width="75" Height="75" BorderBrush="#FF888888" BorderThickness="1.2" CornerRadius="6" Background="#FFF9F9F9">
+                                            <TextBlock Text="👤" FontSize="38" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Border>
+                                    </StackPanel>
+                                </Grid>
+                            </GroupBox>
+
+                            <GroupBox Grid.Row="1" Margin="0,0,0,8" Padding="8">
+                                <GroupBox.Header>
+                                    <TextBlock Text="Formación e Idiomas" FontWeight="Bold"/>
+                                </GroupBox.Header>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <DockPanel Grid.Column="0" Margin="0,0,8,0">
+                                        <TextBlock DockPanel.Dock="Top" Text="Idiomas" FontWeight="SemiBold" Margin="0,0,0,3"/>
+                                        <TextBox x:Name="txtEmpIdiomas" AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" Padding="5"/>
+                                    </DockPanel>
+                                    <DockPanel Grid.Column="1" Margin="8,0,0,0">
+                                        <TextBlock DockPanel.Dock="Top" Text="Formación" FontWeight="SemiBold" Margin="0,0,0,3"/>
+                                        <TextBox x:Name="txtEmpFormacion" AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" Padding="5"/>
+                                    </DockPanel>
+                                </Grid>
+                            </GroupBox>
+
+                            <GroupBox Grid.Row="2" Margin="0,0,0,10" Padding="8">
+                                <GroupBox.Header>
+                                    <TextBlock Text="Restricciones de Disponibilidad" FontWeight="Bold"/>
+                                </GroupBox.Header>
+                                <TextBox x:Name="txtEmpRestricciones" AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" Padding="5"/>
+                            </GroupBox>
+
+                            <DockPanel Grid.Row="3" LastChildFill="False">
+                                <TextBlock DockPanel.Dock="Left" Text="* Campos obligatorios" FontSize="11" Foreground="#FF666666" VerticalAlignment="Center"/>
+                                <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                                    <Button x:Name="btnDescartarEmpleado" Content="Descartar" Padding="14,7" Margin="0,0,10,0"
+                                            Background="White" BorderBrush="#FF666666" BorderThickness="1.2"
+                                            Click="btnDescartarEmpleado_Click"/>
+                                    <Button x:Name="btnGuardarEmpleado" Content="💾 Guardar Cambios" Padding="14,7"
+                                            Background="#FFB0BEC5" BorderBrush="#FF455A64" BorderThickness="1.2"
+                                            Click="btnGuardarEmpleado_Click"/>
+                                </StackPanel>
+                            </DockPanel>
+                        </Grid>
+                    </GroupBox>
+                </Grid>
+            </TabItem>
+
+            <!-- PESTAÑA 4 (Índice 3) -->
+            <TabItem Header="4. Actividades de Verano">
+                <Grid Background="White">
+                    <TextBlock Text="Pendiente de montar: Actividades de Verano" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Gray"/>
+                </Grid>
+            </TabItem>
+
+        </TabControl>
+    </Grid>
+</Window>

@@ -1,0 +1,66 @@
+﻿<Window x:Class="Gestion_camping.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Gestión Camping - Inicio de Sesión" Height="370" Width="560"
+        WindowStartupLocation="CenterScreen" ResizeMode="NoResize" Background="#FFF9F9F9">
+
+    <Grid Margin="30,25,30,20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- 1. CABECERA (Icono + Camping Las Lagunas) -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,20">
+            <Border Width="55" Height="55" Background="#FFE8F5E9" BorderBrush="#FF2E7D32" 
+                    BorderThickness="1.5" CornerRadius="8" Margin="0,0,15,0">
+                <TextBlock Text="👥" FontSize="28" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </Border>
+            <StackPanel VerticalAlignment="Center">
+                <TextBlock Text="Camping Las Lagunas" FontSize="24" FontWeight="Bold" Foreground="#FF1B3B2B"/>
+                <TextBlock Text="Acceso al sistema de gestión" FontSize="13" Foreground="#FF555555"/>
+            </StackPanel>
+        </StackPanel>
+
+        <!-- 2. FORMULARIO (Usuario y Contraseña) -->
+        <StackPanel Grid.Row="1" VerticalAlignment="Center">
+            <Label Content="Usuario:" FontSize="14" FontWeight="SemiBold" Padding="0,0,0,4"/>
+            <TextBox x:Name="txtUsuario" Height="34" FontSize="14" Padding="8,0" 
+                     VerticalContentAlignment="Center" BorderThickness="1.5" BorderBrush="#FF888888"
+                     TabIndex="1" KeyDown="txtUsuario_KeyDown"
+                     ToolTip="Introduce tu nombre de usuario (ej. admin_recepcion)"/>
+
+            <Label Content="Contraseña:" FontSize="14" FontWeight="SemiBold" Padding="0,14,0,4"/>
+            <PasswordBox x:Name="passContrasena" Height="34" FontSize="14" Padding="8,0" 
+                         VerticalContentAlignment="Center" BorderThickness="1.5" BorderBrush="#FF888888"
+                         TabIndex="2" KeyDown="passContrasena_KeyDown"
+                         ToolTip="Introduce tu contraseña"/>
+        </StackPanel>
+
+        <!-- 3. PIE (Ayuda ? a la izquierda + Botones Salir e Iniciar Sesión a la derecha) -->
+        <DockPanel Grid.Row="2" LastChildFill="False" Margin="0,20,0,0">
+            <!-- Ayuda contextual con Tooltip como en el boceto -->
+            <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" VerticalAlignment="Center"
+                        ToolTip="Introduzca sus credenciales de recepcionista.">
+                <Border Width="24" Height="24" CornerRadius="12" BorderBrush="#FF333333" BorderThickness="1.5" Background="White">
+                    <TextBlock Text="?" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                </Border>
+                <Border Background="#FFEEEEEE" BorderBrush="#FFCCCCCC" BorderThickness="1" 
+                        CornerRadius="6" Padding="8,4" Margin="8,0,0,0">
+                    <TextBlock Text="Introduzca sus credenciales de recepcionista." FontSize="11" Foreground="#FF444444"/>
+                </Border>
+            </StackPanel>
+
+            <!-- Botones Salir e Iniciar Sesión -->
+            <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center">
+                <Button x:Name="btnSalir" Content="Salir" Width="85" Height="34" Margin="0,0,10,0"
+                        Background="White" BorderBrush="#FF666666" BorderThickness="1.5"
+                        FontSize="13" TabIndex="4" Click="btnSalir_Click"/>
+                <Button x:Name="btnLogin" Content="Iniciar Sesión" Width="120" Height="34"
+                        Background="#FF4A5D52" Foreground="White" BorderBrush="#FF2E3B32" BorderThickness="1.5"
+                        FontSize="13" FontWeight="Bold" TabIndex="3" Click="btnLogin_Click"/>
+            </StackPanel>
+        </DockPanel>
+    </Grid>
+</Window>

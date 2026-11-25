@@ -1,0 +1,7 @@
+# Carpetas a ignorar
+.bin/
+.git/
+.vs/
+obj/
+
+# Archivos a ignorar
